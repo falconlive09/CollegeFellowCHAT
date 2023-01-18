@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="./images/logo-icon.png" type="image/x-icon"/>
+    <title>College Fellow</title>
+    <%- include("cdn/style") -%>
+    <link rel="stylesheet" href="./css/styles.css"  >
+    <link rel="stylesheet" href="./css/profile.css"  >
+    <link rel="stylesheet" href="./css/active.css"  >
+</head>
+<body>
+
+   <!-- Navbar content -->
+    <div class="nav-wrapper">
+      <nav class="navbar navbar-expand navbar-light" style="background-color:  #081120;" aria-expanded="false">
+        <!-- LOGO  -->
+        <a class="navbar-brand" href="#">
+          <img style="width: 50px; height: 50px;" src="./images/logo-icon.png">
+          <span class="align-bottom">CF</span> 
+        </a>
+        <!-- navbar menu -->
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item ">
+                <a class="nav-link text-white " href="profile" >
+                <i class="fa fa-user-circle" style="font-size:x-large; margin-left: 1.5rem;"></i></a>
+            </li>
+          </ul>
+        
+      </nav>
+    </div>
+     
+    <div class="container text-center mt-5">
+        <h2>oops, <strong style="color: crimson;">404</strong> Page not found.</h2>
+         <h4 class="mt-5"><a href="profile" style="color: cornflowerblue;">Go back to profile</a></h4>
+    </div>
+    
+<footer class="fixed-bottom footer">© 2020 COLLEGE FELLOW</footer>
+
+
+<%- include("cdn/script") -%>
+
+<script>
+  $(document).ready(()=>{
+     
+    $('#userSearch').on("keyup", function() {
+       const username = $(this).val();
+       $.post('/explore', { data: username },(res)=>{
+            var Data = '';
+            $.each(res, (key, value) => {
+                    Data += `<a href='/${value.username}' ><li class='dropdown-item list'>  <div class='list-img'>`;
+                    Data += `<img src='uploads-profile/${ value.photo }'  alt='profile'> </div>`;
+                    Data += "<div class='list-content'> <div><strong>" + value.username + "</strong></div>";
+                    Data += "<div>" + value.collegeName + "</div>";
+                    Data += "</div>  </li> </a>"; 
+                });
+                $('#searchResult').html(Data);
+            
+        });
+    });   
+  });
+</script>
+</body>
+</html>

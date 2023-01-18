@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>College Fellow</title>
+    <link rel="icon" href="./images/logo-icon.png" type="image/x-icon"/>
+    <%- include("cdn/style") -%>
+    <link rel="stylesheet" href="./css/styles.css"  >
+    <link rel="stylesheet" href="./css/profile.css" >
+    <link rel="stylesheet" href="./css/active.css"  >
+</head>
+<body>
+
+   <!-- Navbar content -->
+    <div class="nav-wrapper">
+      <nav class="navbar navbar-expand navbar-light" style="background-color:  #081120;" aria-expanded="false">
+        <!-- LOGO  -->
+        <a class="navbar-brand" href="#">
+          <img style="width: 50px; height: 50px;" src="./images/logo-icon.png">
+          <span class="align-bottom">CF</span> 
+        </a>
+        <!-- navbar menu -->
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item ">
+              <a class="nav-link text-white" href="chat" >
+                <i class="fa fa-paper-plane" style="margin-left: 1rem;"></i></a>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link text-white dropdown-toggle" href="#" id="DroownActive" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <i class="fa fa-toggle-on" style="margin-left: 1rem;"></i></a>
+                <div class="dropdown-menu active-dropdown" aria-labelledby="DropdownActive">
+                  <div class="arrow"></div>
+                  <ul class="coloum" id="statusResult">
+                    <!-- active user -->
+                  </ul>
+                </div>
+            </li>
+            <li class="nav-item dropdown">
+              <a class="nav-link text-white dropdown-toggle" href="#" id="DroownActive" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <i class="fa fa-bell-o" style="margin-left: 1rem;" id="noti"></i></a>
+                <div class="dropdown-menu noti-dropdown" aria-labelledby="DropdownActive">
+                  <div class="arrow"></div>
+                  <ul class="coloum" id="notiResult">
+                    <!-- notification -->
+                  </ul>
+                  </div>
+            </li>
+           <!-- //search user -->
+            <li class="nav-item dropdown">
+              <a class="nav-link text-white dropdown-toggle" href="#" id="DroownExplore" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <i class="fa fa-search-plus" style="margin-left: 1rem;"></i></a>
+                <div class="dropdown-menu explore-dropdown" aria-labelledby="DropdownExplore">
+                  <div class="arrow"></div>
+                  <div class="input-group pt-1 p-2">
+                    <input type="text" class="form-control" placeholder="search..."  id="userSearch"
+                     aria-label="Username" autocomplete="off" aria-describedby="basic-addon1">
+                  </div>
+                  <ul class="coloum" id="searchResult">
+                     <!-- result will here -->
+                  </ul>
+                  </div>
+            </li>
+
+            <li class="nav-item ">
+             
+                <a class="nav-link text-white " href="profile" >
+                <i class="fa fa-user-circle" style="margin-left: 1rem;"></i></a>
+          
+            </li>
+          </ul>
+        
+      </nav>
+    </div>
+
+    <section id="header">
+      
+          <div class="row" style="margin-right: 0px;">
+            <div class="col col-sm-12">
+              <div class="profile-container">
+                <div class=" profile" >
+                  <div class="profile-img text-right">
+                    <img 
+                    <% if(profile.photo) {%>
+                    src="./uploads-profile/<%=profile.photo%>" 
+                    <% }else{ %>
+                      src="./uploads-profile/default-profile.png"  
+                    <% } %>
+                    alt="profile">
+                  </div>
+                  <div class="profile-content ">
+                    <div style="margin-bottom: 0px;"><a class="align-top username"><%= profile.username%></a></div>
+                    <div id="btnSession" style="margin-top: 5px;">
+                    <%  if(user.following.length===0 || user.following.indexOf(profile._id) ==-1) { %>
+                      <button style="color: white;" class="btn btn-primary" onclick="doFollows()">Follow</button> 
+                    <% } else {%>
+                      <a href="/chat/<%=profile._id%>" style="color: white;" class="btn btn-profile hi">Chat</a> 
+                      <button style="color: white;" class="btn btn-logout" onclick="doUnfollows()" >Unfollow</button> 
+                    <% } %>
+                  </div>
+                  </div>
+                </div>
+                  <div class="row">
+                    <div class="col col-sm-12 mt-3 md-follow text-center">
+                      <a data-toggle="modal" data-target="#follow-modal" class="follow followList"><strong class="followNo"><%= profile.follow.length%></strong> followers</a>
+                      <a data-toggle="modal" data-target="#following-modal"class="follow followingList"><strong class="followingNo"><%= profile.following.length%></strong> followings</a>
+                    </div>
+                  </div>
+                </div> 
+              </div>
+            </div>
+            <div class="container temp-div"></div>
+            <div class="row sm-follow">
+              <div class="col col-sm-12 mt-3  text-center">
+                <div style="border-bottom: 1px solid #8f8888;"></div>
+                <a data-toggle="modal" data-target="#follow-modal" class="s-follow followList"><strong class="followNo"><%= profile.follow.length%></strong> followers</a>
+                <a data-toggle="modal" data-target="#following-modal"class="s-follow followingList"><strong class="followingNo"><%= profile.following.length%></strong> followings</a>
+                <div style="border-bottom: 1px solid #8f8888;"></div>
+              </div>
+            </div>
+            <div class="row text-center">
+              <div class="col bio">
+                <p><strong>BIO:</strong>
+                <br><% if(profile.name) {%> 
+                  <%=profile.name %><br>
+                <% } %>👇👇👇👇👇<br>
+                <% if(profile.bio) {%> 
+                  <%const array=profile.bio.split('\n') %>
+                     <%for( item of array){%>
+                      <%=item %> <br>
+                      <%}%>
+                <% } %>
+              </p>
+              </div>
+            </div>
+            <!-- <div class="col col-md-6 col-sm-12"></div> -->
+          </div>
+         
+
+    </section> 
+    <!-- Follow Modal -->
+<div class="modal fade" id="follow-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Followers</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <ul class="coloums" id="followListResult">
+         
+          <!-- follow list here -->
+      
+       </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+    <!-- Following Modal -->
+    <div class="modal fade" id="following-modal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Followings</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <ul class="coloums" id="followingListResult">
+              
+              <!-- following list here -->
+ 
+             </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+<!--log out Modal -->
+<div class="modal" tabindex="-1" id="logout-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Log Out</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p>You want to Logout. Are you sure?</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+        <a href="/users/logout" type="button" class="btn btn-logout">Yes</a>
+      </div>
+    </div>
+  </div>
+</div>
+    
+<footer class="fixed-bottom footer">© 2020 COLLEGE FELLOW</footer>
+
+
+<%- include("cdn/script") -%>
+<script src="/socket.io/socket.io.js" ></script>
+
+<script>
+  $(document).ready(()=>{
+      $.post('/profile/numNotification',{clear: false}, (res)=>{
+        if(res.newFollowing.length>0){
+          $('#noti').html(`<span class="badge badge-danger">${res.newFollowing.length}</span>`); 
+        }else{
+          const Data =`<span class='text-center'>you are updated, See after some time later.</span>`;
+          $('#notiResult').html(Data); 
+        }
+      });
+      //clean notification
+      $('.fa-bell-o').click(()=> {
+        $.post('/profile/numNotification',{clear: true}, res=>{
+          //  console.log(res.newFollowing.length);
+              var Data = '';
+              // console.log(res);
+              if(res.newFollowing.length>0){
+                $.each(res.newFollowing, (key, value) => {
+                
+                Data += `<a href='/${value._id.username}' ><li class='list'>  <div class='list-img'>`;
+                Data += `<img src='uploads-profile/${ value._id.photo }'  alt='profile'> </div>`;
+                Data += "<div class='list-content'> <div><strong>" + value._id.username + "</strong><span class='badge badge-danger ml-3'>New Friend</span></div>";
+                Data += "<div>Start follow you</div>";
+                Data += "</div>  </li> </a>"; 
+          
+            });
+            $('#notiResult').html(Data); 
+              }  
+          });
+      });
+    //search
+    $('#userSearch').on("keyup", function() {
+       const username = $(this).val();
+       $.post('/explore', { data: username },(res)=>{
+            var Data = '';
+            $.each(res, (key, value) => {
+              if("<%=user.username%>" !=value.username){
+                    Data += `<a href='/${value.username}' ><li class='list'>  <div class='list-img'>`;
+                    Data += `<img src='uploads-profile/${ value.photo }'  alt='profile'> </div>`;
+                    Data += "<div class='list-content'> <div><strong>" + value.username + "</strong></div>";
+                    Data += "<div>" + value.collegeName + "</div>";
+                    Data += "</div>  </li> </a>"; 
+              }
+                });
+                $('#searchResult').html(Data);
+            
+        });
+    }); 
+      
+    //follow
+    doFollows = function (){
+      const data={
+        from:"<%=user.username%>",
+        to:"<%=profile.username%>"
+      };
+      $.post('./profile/follow', { data },(res)=>{
+        var Data = '';
+        if(res === true){
+              Data += "<a href='./chat' style='color: white;' class='btn btn-primary hi'>Chat</a>";
+              Data += "<button style='color: white;' class='btn btn-logout ml-2' onclick='doUnfollows()' >Unfollow</button>";
+              $('#btnSession').html(Data);
+              $('.followNo').text(Number($('.followNo').html())+1);
+              location.reload();
+        }  
+        }); 
+    };
+    //unfollow
+    doUnfollows = function(){
+      const data={
+        from:"<%=user.username%>",
+        to:"<%=profile.username%>"
+      };
+      $.post('./profile/unfollow', { data },(res)=>{
+        var Data = '';
+        if(res === true){
+              Data += "<button style='color: white;' class='btn btn-primary' onclick='doFollows()' >Follow</button>";
+              $('#btnSession').html(Data);
+              $('.followNo').text(Number($('.followNo').html())-1);
+              location.reload();
+        }  
+        }); 
+    };
+
+    //active user
+    const socket = io();
+    var username= "<%=user.username%>";
+    socket.emit('newUser',username);
+
+    $('.fa-toggle-on').click(()=>{
+      $.post('/status',(res)=>{
+            var Data = '';
+            if(res.length!==0){
+              $.each(res, (key, value) => {
+                        if("<%=user.username%>" !=value.username){
+                            Data += `<li class='list'>  <div class='list-img'>`;
+                            Data += `<img src='uploads-profile/${ value.photo }'  alt='profile'> </div>`;
+                            Data += "<div class='list-content'> <div><strong>" + value.username + "</strong> </div>";
+                            Data += "<div>Active now</div> <div class='online-list'></div> </div>";
+                            Data += `<div class='list-btn'> <a class='btn btn-primary' href='/chat/${value._id}' >chat</a>`;
+                            Data += "</div>  </li>"; 
+                        }
+                });
+                $('#statusResult').html(Data);
+            }else{
+                Data +=`<span class='text-center'>Your all friends are Offline!</span>`;
+                $('#statusResult').html(Data);
+            }
+            
+        });
+      });
+
+
+       // follow list
+       $('.followList').click(()=>{
+        const username= "<%=profile.username%>"; 
+        const following= "<%=user.following%>";
+      
+        $.post('./profile/followList', { username },(res)=>{
+          var Data = '';
+            $.each(res, (key, value) => {
+                Data += `<li class='list'> <a href='/${value.username}' style='display:flex;' > <div class='list-img'>`;
+                Data += `<img src='uploads-profile/${ value.photo }'  alt='profile'> </div>`;
+                Data += "<div class='list-content'> <div><strong>" + value.username + "</strong> </div>";
+                Data += `<div>${ value.collegeName }</div></div> </a>`;
+                if("<%=user.username%>"!==value.username){
+                if(following.indexOf(value._id)== -1){
+                  Data += '<div class="list-btn right-btn" id='+value._id+'><button class="btn btn-primary" onclick="doFollow(\''+value.username+'\',\''+value._id+'\')">Follow</button></div> '; 
+                } else{
+                  Data +='<div class="list-btn right-btn" id='+value._id+'><button class="btn btn-danger" onclick="doUnfollow(\''+value.username+'\',\''+value._id+'\')">Unfollow</button></div> '; 
+                }
+                }
+                Data += "</li> ";                                  
+            });
+            $('#followListResult').html(Data);
+        }); 
+      });
+      // following list
+      $('.followingList').click(()=>{
+        const username= "<%=profile.username%>"; 
+        const following= "<%=user.following%>";
+        
+        $.post('./profile/followingList', { username },(res)=>{
+          var Data = '';
+          $.each(res, (key, value) => {
+                Data += `<li class='list'> <a href='/${value.username}' style='display:flex;' > <div class='list-img'>`;
+                Data += `<img src='uploads-profile/${ value.photo }'  alt='profile'> </div>`;
+                Data += "<div class='list-content'> <div><strong>" + value.username + "</strong> </div>";
+                Data += `<div>${ value.collegeName }</div></div> </a>`;
+                if("<%=user.username%>"!==value.username){
+                if(following.indexOf(value._id)== -1){
+                  Data += '<div class="list-btn right-btn" id='+value._id+'><button class="btn btn-primary" onclick="doFollow(\''+value.username+'\',\''+value._id+'\')">Follow</button></div> '; 
+                } else{
+                  Data +='<div class="list-btn right-btn" id='+value._id+'><button class="btn btn-danger" onclick="doUnfollow(\''+value.username+'\',\''+value._id+'\')">Unfollow</button></div> '; 
+                }
+                }
+                Data += "</li>";                                  
+            });
+            $('#followingListResult').html(Data);
+        }); 
+      });
+
+    //follow
+    doFollow = function(username,id){
+      const data={
+        from:"<%=user.username%>",
+        to: username
+      };
+      $.post('./profile/follow', { data },(res)=>{
+        var Data = '';
+        if(res === true){
+              Data += '<button class="btn btn-danger" onclick="doUnfollow(\''+username+'\',\''+id+'\')">Unfollow</button>';
+              $(`#${id}`).html(Data);
+              location.reload();
+        }  
+        }); 
+    };
+    //unfollow
+    doUnfollow = function(username,id){
+      const data={
+        from:"<%=user.username%>",
+        to: username
+      };
+      $.post('./profile/unfollow', { data },(res)=>{
+        var Data = '';
+        if(res === true){
+              Data += '<button class="btn btn-primary" onclick="doFollow(\''+username+'\',\''+id+'\')">Follow</button>';
+              $(`#${id}`).html(Data);
+              location.reload();
+        }  
+        }); 
+    };
+    
+  });
+</script>
+</body>
+</html>

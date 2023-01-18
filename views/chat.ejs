@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="/images/logo-icon.png" type="image/x-icon"/>
+    <title>College Fellow</title>
+    <%- include("cdn/style") -%>
+    <link rel="stylesheet" href="/css/styles.css"  >
+    <link rel="stylesheet" href="/css/chat.css"  >
+    <link rel="stylesheet" href="/css/active.css"  >
+</head>
+<body>
+   
+   <!-- Navbar content -->
+    <div class="nav-wrapper">
+      <nav class="navbar navbar-expand navbar-light" style="background-color:  #081120;" aria-expanded="false">
+        <!-- LOGO  -->
+        <a class="navbar-brand" href="#">
+            <img style="width: 50px; height: 50px;" src="/images/logo-icon.png">
+            <span class="align-bottom">CF</span> 
+        </a>
+        <!-- navbar menu -->
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item ">
+            <a class="nav-link " href="#" style="color: #D03737;"  >
+              <i class="fa fa-paper-plane" style="margin-left: 1rem;"></i></a>
+          </li>
+          
+         <li class="nav-item dropdown">
+              <a class="nav-link text-white dropdown-toggle" href="#" id="DroownActive" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <i class="fa fa-toggle-on" style="margin-left: 1rem;"></i></a>
+                <div class="dropdown-menu active-dropdown" aria-labelledby="DropdownActive">
+                  <div class="arrow"></div>
+                  <ul class="coloum" id="statusResult">
+                    <!-- active user -->
+                  </ul>
+                </div>
+            </li>
+
+            <li class="nav-item dropdown">
+              <a class="nav-link text-white dropdown-toggle" href="#" id="DroownActive" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" >
+                <i class="fa fa-bell-o" style="margin-left: 1rem;" id="noti"></i></a>
+                <div class="dropdown-menu noti-dropdown" aria-labelledby="DropdownActive">
+                  <div class="arrow"></div>
+                  <ul class="coloum" id="notiResult">
+                    <!-- notification -->
+                  </ul>
+                  </div>
+            </li>
+
+            <li class="nav-item ">
+              <a class="nav-link text-white" href="/profile" >
+                <i class="fa fa-user-circle" style="margin-left: 1rem;"></i></a>
+            </li>
+          </ul>
+        <!--active chat list-->
+        <a class="navbar-brand" href="#menu-toggle" id="menu-toggle" style="margin-right: 0px;">
+            <i class="fa fa-bars" style="margin-left: 1rem; color: white;"></i>
+        </a>
+      </nav>
+    </div>
+ <!-- Navbar content wrapper -->
+
+    <div id="wrapper" class="toggled">
+        <div class="container-fluid" >
+            <!-- Sidebar -->
+            <div id="sidebar-wrapper">
+                <!-- <div class="input-group search-user">
+                    <div class="input-group-prepend">
+                      <span class="input-group-text" id="basic-addon1">
+                          <i class="fa fa-search" ></i>
+                      </span>
+                    </div>
+                    <input type="text" class="form-control" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                  </div> -->
+                <div style="border-bottom: 1px solid black;"></div>
+                
+                <ul id="users" style="margin-top: 1rem;">
+                      <!-- chatList user will here -->
+                
+                </ul>
+            </div>
+            <!-- /#sidebar-wrapper -->
+            <!-- Page Content -->
+            <div id="page-content-wrapper">
+                <div class="row justify-content-center h-100 ">
+                    <div class="col" style="padding: 0px;">
+                      <!--chat header-->
+                      <% if(chatwith === '') { %>
+                        <div class="container text-center mt-5">
+                          
+                            <i class="fa fa-paper-plane" style="font-size:100px;
+                                                                color: #D03737;
+                                                                border: 3px solid black;
+                                                                padding: 20px;
+                                                                padding-right: 30px;
+                                                                border-radius: 50%;"></i>
+                           <h1 class="mt-3">Welcome To College Fellow !!!</h1>
+                           <h4>Send Message to your Friends.</h4>
+                           <button data-toggle="modal" data-target="#msg-modal" class="btn btn-primary mt-3" ><strong> Send Message</strong></button>
+                        </div>
+                      <% } else {%>
+                      <div class="card-header">
+                        <div class="d-flex bd-highlight" id="chatWith">
+                         
+                          <!-- <span id="action_menu_btn"><i class="fa fa-ellipsis-v"></i></span>
+                          <div class="action_menu">
+                            <ul>
+                              <li><i class="fa fa-user-circle"></i> View profile</li>
+                              <li><i class="fa fa-trash"></i> Delete chat</li>
+                              <li><i class="fa fa-ban"></i> Block</li>
+                            </ul>
+                          </div> -->
+                      </div>
+                      <div class="chat-divider"></div>
+                      <!--chat cantainer-->
+                      <div class="chat-container" id="msgContainer">
+                          <!-- chat show here -->
+                      </div>
+                      <div style="display: flex;">
+                        <div class="google-loader" id="loader">
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                          <span></span>
+                        </div>
+                        <div class="seen-status">
+                          seen
+                        </div>
+                      </div>
+                    </div>
+                      <!--Message send form container -->
+                      <form id='chat-form'>
+                        <div class="card-footer ">
+                          <div class="input-group"> 
+                            <!-- <div class="input-group-append">
+                              <span class="input-group-text attach_btn"><i class="fa fa-smile-o"></i></span>
+                            </div> -->
+                            <input type="text"  class="form-control type_msg" id="ipMessage" placeholder="Type your message..." autocomplete=off></input>
+                            <div class="input-group-append">
+                              <button class="input-group-text send_btn btn" type="submit"><i class="fa fa-location-arrow"></i></button>
+                            </div>
+                          </div>
+                        </div> 
+                      </form>
+                      <!-- <footer class="fixed-bottom footer">© 2020 COLLEGE FELLOW</footer> -->
+                      
+                    <% }%>
+
+                    </div>
+                </div>
+              </div>
+            <!-- /#page-content-wrapper -->
+        </div>
+    </div>
+    <div class="modal" tabindex="-1" id="msg-modal">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Message</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>If you are mobile user click on right top corner 3 bar menu 
+              icon to seen Active chatlist. And if any user not in your list
+               (and first time your chatlist is empty) go to user profile with you want 
+               to chat first follow him/her then click on chat button.</p>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+    <audio id="msg-tone" src="/tone/msg-tone.mp3" ></audio>
+    <!-- /#wrapper -->
+
+    <!-- JQuery -->
+   <%- include("cdn/script") -%>
+   <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.1/moment.min.js"></script>
+   <script src="/socket.io/socket.io.js" ></script>
+    <script>
+      	$(document).ready(function(){
+          $(window).resize(function() {
+              if(window.innerWidth > 800) {
+                  $("body").css({
+                      "overflow-x": "hidden"
+                  });
+              } else {
+                  $("body").css({
+                      "overflow-x": "visible"
+                  });
+              }
+          });
+            const chatForm = document.getElementById('chat-form');
+            // $('.fa-smile-o').click(e =>{
+                 
+            // });
+            $.post('/profile/numNotification',{clear: false}, (res)=>{
+              if(res.newFollowing.length>0){
+                $('#noti').html(`<span class="badge badge-danger">${res.newFollowing.length}</span>`); 
+              }else{
+                const Data =`<span class='text-center'>you are updated, See after some time later.</span>`;
+                $('#notiResult').html(Data); 
+              }
+            });
+            //clean notification
+            $('.fa-bell-o').click(()=> {
+              $.post('/profile/numNotification',{clear: true}, res=>{
+                //  console.log(res.newFollowing.length);
+                    var Data = '';
+                    // console.log(res);
+                    if(res.newFollowing.length>0){
+                      $.each(res.newFollowing, (key, value) => {
+                      
+                      Data += `<a href='/${value._id.username}' ><li class='list'>  <div class='list-img'>`;
+                      Data += `<img src='uploads-profile/${ value._id.photo }'  alt='profile'> </div>`;
+                      Data += "<div class='list-content'> <div><strong>" + value._id.username + "</strong><span class='badge badge-danger ml-3'>New Friend</span></div>";
+                      Data += "<div>Start follow you</div>";
+                      Data += "</div>  </li> </a>"; 
+                
+                  });
+                  $('#notiResult').html(Data); 
+                    }  
+                });
+            });
+            $('#action_menu_btn').click(function(){
+              $('.action_menu').toggle();
+            });
+            $("#menu-toggle").click(function(e) {
+                e.preventDefault();
+                $("#wrapper").toggleClass("toggled");
+            });
+
+            //socket clinet side
+            const socket = io();
+            var username= "<%=user.username%>";
+            socket.emit('newUser',username);
+            //active user
+            $('.fa-toggle-on').click(()=>{
+              $.post('/status',(res)=>{
+                    var Data = '';
+                    if(res.length!==0){
+                      $.each(res, (key, value) => {
+                                if("<%=user.username%>" !=value.username){
+                                    Data += `<li class='list'>  <div class='list-img'>`;
+                                    Data += `<img src='/uploads-profile/${ value.photo }'  alt='profile'> </div>`;
+                                    Data += "<div class='list-content'> <div><strong>" + value.username + "</strong> </div>";
+                                    Data += "<div>Active now</div> <div class='online-list'></div> </div>";
+                                    Data += `<div class='list-btn'> <a class='btn btn-primary' href='/chat/${value._id}' >chat</a>`;
+                                    Data += "</div>  </li>"; 
+                                }
+                        });
+                        $('#statusResult').html(Data);
+                    }else{
+                        Data +=`<span class='text-center'>Your all friends are Offline!</span>`;
+                        $('#statusResult').html(Data);
+                    } 
+              });
+            });
+            
+            //user chatlist
+            $.post('/chatList',(res)=>{
+                // console.log(res);
+                var info = '';
+                $.each(res, (key, value) => {
+                    info +=  `<a  href='/chat/${value.ele.userId._id}'  ><li> <div class="user-header">`          
+                    info += `<img src='/uploads-profile/${ value.ele.userId.photo }' style="width: 50px; height:50px; border-radius: 50%;">`
+                    info += `<strong class="align-top" style="margin-left: 5px;"> `
+                    if(value.ele.userId.name === undefined){
+                    info +=`${ value.ele.userId.username}`;
+                    }else{
+                      info +=`${ value.ele.userId.name}`;  
+                    }
+                    info +=`</strong>`;
+                    if(value.ele.chatId.seen == false && value.who == true){
+                      info +=`<span class='badge badge-danger ml-3' id='${value.ele.userId._id}' ><i class='fa fa-commenting'></i></span>`;
+                    }
+                    info +=`</div> <div class='user-footer'> <p class='text-smaller text-muted mb-0'> `;
+                    if(value.ele.userId.active===true){
+                    info +='Active now';
+                    info +=`</p> <span class="online_icon"></span>`;
+                    }else{
+                    const t=moment(Number(value.ele.userId.lastSeen)).fromNow()
+                    info +=`${t}`;
+                    info +=`</p> <span class="online_icon offline"></span>`;
+                    }  
+                    info +=` </div> </li> </a>`     
+                });
+                $('#users').html(info); 
+            });
+            
+                  
+                         
+            //join specific room
+            if("<%=chatwith._id%>"){
+              var cphoto='';
+              var n = 0;
+              var height =0;
+              const username ="<%=user.username%>";
+              const id ="<%=user._id%>";
+              var room = '';
+              $.post('/room',{id:"<%=chatwith._id%>"},(chatRoomID)=>{
+                    room= chatRoomID;
+
+                    socket.emit('joinChat', {username, room}); // username,chatRoomID
+                    //chatshow
+                    $.post('/chatMessage',{room},(res)=>{
+                      // console.log(res);
+                      if(res.seen === true && String(res.chats[0].sender._id)==id){
+                        $('.seen-status').addClass('show');
+                      }
+                      $('#msgContainer').html(showChat(res.chats));
+                      // Scroll down
+                      $(".chat-container").stop().animate({ scrollTop: $(".chat-container")[0].scrollHeight}, 100);
+                      
+                    });
+              });
+              //scroling (old msg)
+              $(".chat-container").scroll(e => {
+                
+                // console.log(scroll ,n);
+                const {scrollTop, scrollHeight, clientHeight} =  $(".chat-container")[0];
+                $('.seen-status').removeClass('show')
+                if(scrollTop + clientHeight +5 >= scrollHeight){
+                          $.post('/chatMessage', {room}, res=>{
+                            if(res.seen === true && String(res.chats[0].sender._id)==id){
+                               $('.seen-status').addClass('show');
+                            }
+                          })
+                      }
+                if(scrollTop==0) {
+                  n++;
+                  $.post('/oldChatMessage',{room, scroll: n},(res)=>{
+                      // console.log(res);
+                      $('#msgContainer').prepend(showChat(res.chats)); 
+                      if($(".chat-container")[0].scrollHeight>height){
+                        $(".chat-container")[0].scrollTop+=200;
+                        // console.log(height, scrollHeight);
+                      }
+                      height = scrollHeight;
+                    });
+                }
+                
+              });
+              // Message submit
+              chatForm.addEventListener('submit', e => {
+                e.preventDefault();
+
+                // Get message text
+                let msg = e.target.elements.ipMessage.value;
+                
+                msg = msg.trim();
+                
+                if (!msg){
+                  return false;
+                }
+
+                // Emit message to server
+                socket.emit('chatMessage', msg, id, room);
+                var data ='';
+                  data +=`<div class="d-flex justify-content-end mb-4">`; 
+                  data +=`<div class="msg_cotainer_send"> ${msg}`
+                  var t = moment(new Date().getTime()).format('LT');
+                  data +=`<span class="msg_time ml-2">${t}</span>
+                                    </div>
+                                    </div>`;  
+                  $('#msgContainer').append(data); 
+                   // Scroll down
+                   $(".chat-container").stop().animate({ scrollTop: $(".chat-container")[0].scrollHeight}, 100);
+                // Clear input
+                e.target.elements.ipMessage.value = '';
+                e.target.elements.ipMessage.focus();
+                $('.seen-status').removeClass('show');
+              }); 
+              //typing
+              //1.emit
+              $('#ipMessage').bind('keypress', ()=>{
+                  socket.emit('typing',room, id);
+              });
+              //2. listen
+              socket.on('typing',(roomId,userId)=>{
+                if(roomId==room && userId!=id){
+                   $('#loader').addClass('show');
+                   setTimeout(()=>{$('#loader').removeClass('show');},1000);
+                }
+              });
+              
+              // Message from server
+              socket.on('message', message => {
+                if(message.room==room && message.id!="<%=user._id%>" ){
+                  // console.log(message);
+                  // incoming message
+                  var data ='';
+                  data +=`<div class="d-flex justify-content-start mb-4">
+                                      <div class="img_cont_msg">`; 
+                  data +=`<img src='/uploads-profile/${ cphoto }' class="rounded-circle user_img_msg">
+                                      </div>
+                                      <div class="msg_cotainer"> ${message.msg}`
+                  var t = moment(new Date().getTime()).format('LT');
+                  data +=`<span class="msg_time ml-2">${t}</span>
+                                    </div>
+                                    </div>`;  
+                  $('#msgContainer').append(data);  
+                  $('#msg-tone')[0].play(); 
+                  $('.seen-status').removeClass('show');                                 
+                  // Scroll down
+                  $(".chat-container").stop().animate({ scrollTop: $(".chat-container")[0].scrollHeight}, 100);
+                  }
+              });
+              $(window).focus(()=>{
+                    socket.emit('read',room , id);
+                    const spanid = "<%=chatwith._id%>";
+                    $(`#${spanid}`).hide(); 
+              });
+              socket.on('read',(roomId, userId)=>{
+                  if(roomId==room && userId !=id){
+                    $('.seen-status').addClass('show');
+                  }
+              });
+              // upper header of chat section 
+              $.post('/chatWith',{id:"<%=chatwith._id%>"},(res)=>{
+                    var data ='';
+                    cphoto = res.photo;
+                    data +=`<div class="img_cont">`
+                    data +=`<img src='/uploads-profile/${ res.photo }' class="rounded-circle user_img">`  
+                    if(res.active===true){
+                        data +=`<span class="online "></span>`;
+                        data +=`</div> <div class="user_info"> <strong class="align-bottom">`
+                                  if(res.name === undefined){
+                                    data +=`${ res.username}`;
+                                  }else{
+                                    data +=`${ res.name}`;  
+                                  }
+                        data += '</strong>';  
+                        data +=`<p id="notification" class="">Active now</p> </div>`;    
+                    }else{
+                    const t=moment(Number(res.lastSeen)).fromNow()
+                    data +=`<span class="online offline"></span>`;
+                        data +=`</div> <div class="user_info"> <strong class="align-bottom">`
+                                  if(res.name === undefined){
+                                    data +=`${ res.username}`;
+                                  }else{
+                                    data +=`${ res.name}`;  
+                                  }
+                        data += '</strong>';  
+                        data +=`<p id="notification" class="">${t}</p> </div>`;  
+                    } 
+                    
+                    $('#chatWith').html(data);   
+              });
+            }
+            function showChat(res){
+              var data = '';
+              $.each(res.reverse(), (key, value) => {
+                           if(value.sender._id=="<%=chatwith._id%>"){
+                            data +=`<div class="d-flex justify-content-start mb-4">
+                                    <div class="img_cont_msg">`; 
+                            data +=`<img src='/uploads-profile/${ value.sender.photo }' class="rounded-circle user_img_msg">
+                                    </div>
+                                    <div class="msg_cotainer"> ${value.msg}`          
+                           }
+                           else{
+                            data +=`<div class="d-flex justify-content-end mb-4">`; 
+                            data +=`<div class="msg_cotainer_send"> ${value.msg}` 
+                           }
+                           var t = moment(value.time).format('LT');
+                           data +=`<span class="msg_time ml-2">${t}</span>
+                                   </div>
+                                   </div>`;
+                      });
+                      return data;
+            }
+   
+        });
+        // <div class="d-flex justify-content-end mr-4" style="margin-top:-20px;">seen
+        //                            </div>
+    </script>
+</body>
+</html>
